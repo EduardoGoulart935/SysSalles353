@@ -1,0 +1,325 @@
+object Modulo: TModulo
+  Height = 328
+  Width = 529
+  object Conexao: TUniConnection
+    ProviderName = 'MySQL'
+    Port = 3306
+    Database = 'dbsyssales353'
+    Username = 'root'
+    Server = 'localhost'
+    Connected = True
+    Left = 32
+    Top = 5
+  end
+  object Provider: TMySQLUniProvider
+    Left = 91
+    Top = 5
+  end
+  object Transacoes: TUniTransaction
+    DefaultConnection = Conexao
+    Left = 165
+    Top = 5
+  end
+  object sqlOff: TUniSQL
+    Connection = Conexao
+    Left = 240
+    Top = 5
+  end
+  object uqUsuarios: TUniQuery
+    Connection = Conexao
+    SQL.Strings = (
+      'select * from usuarios')
+    OnCalcFields = uqUsuariosCalcFields
+    Left = 75
+    Top = 96
+    object uqUsuariosUsuario_ID: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'Usuario_ID'
+    end
+    object uqUsuariosNome: TStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 50
+    end
+    object uqUsuariosSobrenome: TStringField
+      FieldName = 'Sobrenome'
+      Required = True
+      Size = 50
+    end
+    object uqUsuarioseMail: TStringField
+      FieldName = 'eMail'
+      Required = True
+      Size = 100
+    end
+    object uqUsuariosUsuario: TStringField
+      FieldName = 'Usuario'
+      Required = True
+      Size = 32
+    end
+    object uqUsuariosSenha: TStringField
+      FieldName = 'Senha'
+      Required = True
+      Size = 32
+    end
+    object uqUsuariosNivel_usuario: TStringField
+      FieldName = 'Nivel_usuario'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqUsuariosDta_cadastro: TDateTimeField
+      FieldName = 'Dta_cadastro'
+      Required = True
+    end
+    object uqUsuariosDta_ultimo_login: TDateTimeField
+      FieldName = 'Dta_ultimo_login'
+      Required = True
+    end
+    object uqUsuariosAtivado: TStringField
+      FieldName = 'Ativado'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqUsuariosNivelUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NivelUser'
+      Calculated = True
+    end
+    object uqUsuariosStatusUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'StatusUser'
+      Calculated = True
+    end
+    object uqUsuariosinfo: TMemoField
+      FieldKind = fkCalculated
+      FieldName = 'info'
+      BlobType = ftMemo
+      Calculated = True
+    end
+  end
+  object udsUsuarios: TUniDataSource
+    DataSet = uqUsuarios
+    Left = 171
+    Top = 96
+  end
+  object uqFornecedores: TUniQuery
+    SQLInsert.Strings = (
+      'INSERT INTO fornecedores'
+      '  (CODFORN, NOME, CNPJ, RUA, BAIRRO, CIDADE, CEP, UF, FONE)'
+      'VALUES'
+      
+        '  (:CODFORN, :NOME, :CNPJ, :RUA, :BAIRRO, :CIDADE, :CEP, :UF, :F' +
+        'ONE)')
+    SQLDelete.Strings = (
+      'DELETE FROM fornecedores'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN')
+    SQLUpdate.Strings = (
+      'UPDATE fornecedores'
+      'SET'
+      
+        '  CODFORN = :CODFORN, NOME = :NOME, CNPJ = :CNPJ, RUA = :RUA, BA' +
+        'IRRO = :BAIRRO, CIDADE = :CIDADE, CEP = :CEP, UF = :UF, FONE = :' +
+        'FONE'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN')
+    SQLLock.Strings = (
+      'SELECT * FROM fornecedores'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN'
+      'FOR UPDATE')
+    SQLRefresh.Strings = (
+      
+        'SELECT CODFORN, NOME, CNPJ, RUA, BAIRRO, CIDADE, CEP, UF, FONE F' +
+        'ROM fornecedores'
+      'WHERE'
+      '  CODFORN = :CODFORN')
+    SQLRecCount.Strings = (
+      'SELECT COUNT(*) FROM fornecedores')
+    Connection = Conexao
+    SQL.Strings = (
+      'select * from fornecedores')
+    Left = 209
+    Top = 192
+    object uqFornecedoresUsuario_ID: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'Usuario_ID'
+    end
+    object uqFornecedoresNome: TStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 100
+    end
+    object uqFornecedoresSobrenome: TStringField
+      FieldName = 'Sobrenome'
+      Required = True
+      Size = 50
+    end
+    object uqFornecedoreseMail: TStringField
+      FieldName = 'eMail'
+      Required = True
+      Size = 100
+    end
+    object uqFornecedoresUsuario: TStringField
+      FieldName = 'Usuario'
+      Required = True
+      Size = 32
+    end
+    object uqFornecedoresSenha: TStringField
+      FieldName = 'Senha'
+      Required = True
+      Size = 32
+    end
+    object uqFornecedoresNivel_usuario: TStringField
+      FieldName = 'Nivel_usuario'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqFornecedoresDta_cadastro: TDateTimeField
+      FieldName = 'Dta_cadastro'
+      Required = True
+    end
+    object uqFornecedoresDta_ultimo_login: TDateTimeField
+      FieldName = 'Dta_ultimo_login'
+      Required = True
+    end
+    object uqFornecedoresAtivado: TStringField
+      FieldName = 'Ativado'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqFornecedoresNivelUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NivelUser'
+      Calculated = True
+    end
+    object uqFornecedoresStatusUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'StatusUser'
+      Calculated = True
+    end
+    object uqFornecedoresinfo: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'info'
+      Calculated = True
+    end
+  end
+  object udsFornecedores: TUniDataSource
+    DataSet = uqFornecedores
+    Left = 313
+    Top = 192
+  end
+  object uqClientes: TUniQuery
+    SQLInsert.Strings = (
+      'INSERT INTO fornecedores'
+      '  (CODFORN, NOME, CNPJ, RUA, BAIRRO, CIDADE, CEP, UF, FONE)'
+      'VALUES'
+      
+        '  (:CODFORN, :NOME, :CNPJ, :RUA, :BAIRRO, :CIDADE, :CEP, :UF, :F' +
+        'ONE)')
+    SQLDelete.Strings = (
+      'DELETE FROM fornecedores'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN')
+    SQLUpdate.Strings = (
+      'UPDATE fornecedores'
+      'SET'
+      
+        '  CODFORN = :CODFORN, NOME = :NOME, CNPJ = :CNPJ, RUA = :RUA, BA' +
+        'IRRO = :BAIRRO, CIDADE = :CIDADE, CEP = :CEP, UF = :UF, FONE = :' +
+        'FONE'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN')
+    SQLLock.Strings = (
+      'SELECT * FROM fornecedores'
+      'WHERE'
+      '  CODFORN = :Old_CODFORN'
+      'FOR UPDATE')
+    SQLRefresh.Strings = (
+      
+        'SELECT CODFORN, NOME, CNPJ, RUA, BAIRRO, CIDADE, CEP, UF, FONE F' +
+        'ROM fornecedores'
+      'WHERE'
+      '  CODFORN = :CODFORN')
+    SQLRecCount.Strings = (
+      'SELECT COUNT(*) FROM fornecedores')
+    Connection = Conexao
+    SQL.Strings = (
+      'select * from clientes'
+      '')
+    Left = 361
+    Top = 120
+    object uqClientesUsuario_ID: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'Usuario_ID'
+    end
+    object uqClientesNome: TStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 40
+    end
+    object uqClientesSobrenome: TStringField
+      FieldName = 'Sobrenome'
+      Required = True
+      Size = 50
+    end
+    object uqClienteseMail: TStringField
+      FieldName = 'eMail'
+      Required = True
+      Size = 100
+    end
+    object uqClientesUsuario: TStringField
+      FieldName = 'Usuario'
+      Required = True
+      Size = 32
+    end
+    object uqClientesSenha: TStringField
+      FieldName = 'Senha'
+      Required = True
+      Size = 32
+    end
+    object uqClientesNivel_usuario: TStringField
+      FieldName = 'Nivel_usuario'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqClientesDta_cadastro: TDateTimeField
+      FieldName = 'Dta_cadastro'
+      Required = True
+    end
+    object uqClientesDta_ultimo_login: TDateTimeField
+      FieldName = 'Dta_ultimo_login'
+      Required = True
+    end
+    object uqClientesAtivado: TStringField
+      FieldName = 'Ativado'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqClientesNivelUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NivelUser'
+      Calculated = True
+    end
+    object uqClientesStatusUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'StatusUser'
+      Calculated = True
+    end
+    object uqClientesinfo: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'info'
+      Calculated = True
+    end
+  end
+  object udsClientes: TUniDataSource
+    DataSet = uqClientes
+    Left = 441
+    Top = 120
+  end
+end

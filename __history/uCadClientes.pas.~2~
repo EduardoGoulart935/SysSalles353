@@ -1,0 +1,42 @@
+unit uCadClientes;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
+  FMX.ExtCtrls, FMX.StdCtrls, FMX.Controls.Presentation;
+
+type
+  TfCadClientes = class(TForm)
+    pTopo: TPanel;
+    pTopo01: TPanel;
+    lTitulo: TLabel;
+    pTopo02: TPanel;
+    Panel1: TPanel;
+    RegPrimeiro: TImageViewer;
+    RegAnterior: TImageViewer;
+    RegProximo: TImageViewer;
+    RegUltimo: TImageViewer;
+    Panel2: TPanel;
+    Inserir: TImageViewer;
+    Deletar: TImageViewer;
+    Editar: TImageViewer;
+    Gravar: TImageViewer;
+    Cancelar: TImageViewer;
+    Atualizar: TImageViewer;
+    Sair: TImageViewer;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fCadClientes: TfCadClientes;
+
+implementation
+
+{$R *.fmx}
+
+end.

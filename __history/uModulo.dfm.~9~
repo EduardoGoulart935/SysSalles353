@@ -1,0 +1,42 @@
+object Modulo: TModulo
+  Height = 492
+  Width = 794
+  PixelsPerInch = 144
+  object Conexao: TUniConnection
+    ProviderName = 'MySQL'
+    Port = 3306
+    Database = 'bdsyssales'
+    Username = 'root'
+    Server = 'localhost'
+    Connected = True
+    Left = 48
+    Top = 8
+  end
+  object Provider: TMySQLUniProvider
+    Left = 137
+    Top = 8
+  end
+  object Transacoes: TUniTransaction
+    DefaultConnection = Conexao
+    Left = 248
+    Top = 8
+  end
+  object sqlOff: TUniSQL
+    Connection = Conexao
+    Left = 360
+    Top = 8
+  end
+  object uqUsuarios: TUniQuery
+    Connection = Conexao
+    SQL.Strings = (
+      'select * from usuarios')
+    Active = True
+    Left = 113
+    Top = 144
+  end
+  object udsUsuarios: TUniDataSource
+    DataSet = uqUsuarios
+    Left = 257
+    Top = 144
+  end
+end

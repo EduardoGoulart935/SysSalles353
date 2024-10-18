@@ -1,0 +1,16 @@
+program SysSales;
+
+uses
+  System.StartUpCopy,
+  FMX.Forms,
+  uSplash in 'uSplash.pas' {fSplash},
+  uModulo in 'uModulo.pas' {Modulo: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfSplash, fSplash);
+  Application.CreateForm(TModulo, Modulo);
+  Application.Run;
+end.

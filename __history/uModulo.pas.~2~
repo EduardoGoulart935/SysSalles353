@@ -1,0 +1,33 @@
+unit uModulo;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, DBAccess, Uni, MemDS, UniProvider,
+  MySQLUniProvider;
+
+type
+  TModulo = class(TDataModule)
+    Conexao: TUniConnection;
+    Provedor: TMySQLUniProvider;
+    Transacoes: TUniTransaction;
+    Procedimentos: TUniStoredProc;
+    SqlOff: TUniSQL;
+    UniQuery1: TUniQuery;
+    UniDataSource1: TUniDataSource;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Modulo: TModulo;
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,323 @@
+unit uCadUsuarios;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
+  Data.Bind.Controls, FMX.ListView.Types, FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base, Data.Bind.EngExt, Fmx.Bind.DBEngExt, System.Rtti,
+  System.Bindings.Outputs, Fmx.Bind.Editors, Data.Bind.Components,
+  Data.Bind.DBScope, Data.DB, DBAccess, Uni, MemDS, FMX.ListView, FMX.Layouts,
+  Fmx.Bind.Navigator, FMX.StdCtrls, FMX.DateTimeCtrls, FMX.Edit, FMX.ExtCtrls,
+  FMX.Controls.Presentation, FMX.EditBox, FMX.NumberBox, FMX.ListBox;
+
+type
+  TfCadUsuarios = class(TForm)
+    pTopo: TPanel;
+    pTopo01: TPanel;
+    lTitulo: TLabel;
+    pTopo02: TPanel;
+    Panel1: TPanel;
+    RegPrimeiro: TImageViewer;
+    RegAnterior: TImageViewer;
+    RegProximo: TImageViewer;
+    RegUltimo: TImageViewer;
+    Panel2: TPanel;
+    Inserir: TImageViewer;
+    Deletar: TImageViewer;
+    Editar: TImageViewer;
+    Gravar: TImageViewer;
+    Cancelar: TImageViewer;
+    Atualizar: TImageViewer;
+    Sair: TImageViewer;
+    lbID: TLabel;
+    lbNome: TLabel;
+    lbSobrenome: TLabel;
+    lbEmail: TLabel;
+    lbUsuario: TLabel;
+    lbSenha: TLabel;
+    lbInformacoes: TLabel;
+    edtNome: TEdit;
+    edtSobrenome: TEdit;
+    edtEmail: TEdit;
+    edtInfo: TEdit;
+    edtUsuario: TEdit;
+    edtSenha: TEdit;
+    lbDtaCad: TLabel;
+    dtCadastro: TDateEdit;
+    lbDtaAces: TLabel;
+    dtUAcesso: TDateEdit;
+    ListView1: TListView;
+    pCodigo: TPanel;
+    lCodigoID: TLabel;
+    edtSenha2: TEdit;
+    VerSenha: TImageViewer;
+    cbNivelUser: TComboBox;
+    cbStatusUser: TComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    uqUsuarios: TUniQuery;
+    uqUsuariosUsuario_ID: TIntegerField;
+    uqUsuariosNome: TStringField;
+    uqUsuariosSobrenome: TStringField;
+    uqUsuarioseMail: TStringField;
+    uqUsuariosUsuario: TStringField;
+    uqUsuariosSenha: TStringField;
+    uqUsuariosNivel_usuario: TStringField;
+    uqUsuariosDta_cadastro: TDateTimeField;
+    uqUsuariosDta_ultimo_login: TDateTimeField;
+    uqUsuariosAtivado: TStringField;
+    uqUsuariosNivelUser: TStringField;
+    uqUsuariosStatusUser: TStringField;
+    udsUsuarios: TUniDataSource;
+    uqUsuariosinfo: TStringField;
+    procedure RegPrimeiroClick(Sender: TObject);
+    procedure RegAnteriorClick(Sender: TObject);
+    procedure RegProximoClick(Sender: TObject);
+    procedure RegUltimoClick(Sender: TObject);
+    procedure RegInserirClick(Sender: TObject);
+    procedure SairClick(Sender: TObject);
+    procedure GravarClick(Sender: TObject);
+    procedure uqUsuariosCalcFields(DataSet: TDataSet);
+    procedure InserirClick(Sender: TObject);
+    procedure CancelarClick(Sender: TObject);
+    procedure VerSenhaMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure VerSenhaMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure DeletarClick(Sender: TObject);
+    procedure EditarClick(Sender: TObject);
+    procedure AtualizarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fCadUsuarios: TfCadUsuarios;
+
+implementation
+
+{$R *.fmx}
+
+uses uModulo;
+
+procedure TfCadUsuarios.AtualizarClick(Sender: TObject);
+begin
+
+// Verificar se a tabela está em Inserção ou Edição
+if (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela está em uso!' + CHR(13)+
+'Cancele, antes de atualizar');
+Exit;
+End;
+uqUsuarios.Refresh;
+End;
+
+procedure TfCadUsuarios.CancelarClick(Sender: TObject);
+Begin
+          ShowMessage ('Atividades canceladas!');
+          uqUsuarios.Cancel;
+End;
+
+procedure TfCadUsuarios.DeletarClick(Sender: TObject);
+
+Begin // Verificar se a tabela está em Inserção ou Edição
+if (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela já está em uso!' + CHR(13)+
+'Cancele, antes de Deletar');
+Exit;
+End;
+// Perguntar antes
+If MessageDlg('Deletar Registro?',
+TmsgDlgType.MTConfirmation,
+[TMsgDlgBtn.MBYes, TMsgDlgBtn.MBNO],0)
+= MRYes
+Then Begin
+uqUsuarios.Delete; // Excluindo registro
+ShowMessage ('Excluído com Sucesso!');
+End
+Else ShowMessage ('Não Excluído!')
+End;
+
+
+procedure TfCadUsuarios.EditarClick(Sender: TObject);
+begin
+
+// Verificar se a tabela está em Inserção ou Edição
+if (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela já está em uso!'+
+CHR(13)+
+'Cancele, se desejar');
+Exit;
+End;
+uqUsuarios.Edit;
+End;
+
+
+procedure TfCadUsuarios.GravarClick(Sender: TObject);
+Begin
+          { Criticas antes de salvar
+            - Verificar se todas as informações estão presentes
+          }
+          // Verificar se a tabela está em Inserção ou Edição
+          If (uqUsuarios.State) in [dsInsert, dsEdit]
+             Then Begin
+                    // Verifica os valores dos combobox
+                    // Nivel do Usuario
+                    Case cbNivelUser.ItemIndex of
+                      0: uqUsuariosNivel_usuario.Value := '0';
+                      1: uqUsuariosNivel_usuario.Value := '1';
+                      2: uqUsuariosNivel_usuario.Value := '2';
+                    End;
+                    // Status do Usuario
+                    Case cbStatusUser.ItemIndex of
+                      0: uqUsuariosAtivado.Value := '0';
+                      1: uqUsuariosAtivado.Value := '1';
+                    End;
+
+                    uqUsuarios.Post; // metodo para gravar
+                    ShowMessage ('Dados gravados com sucesso!');
+                    Exit;
+                  End;
+           ShowMessage ('Tabela não está em Edição ou Inserção!'
+                         + CHR(13)+
+                        'Gravação Cancelada!');
+End;
+
+procedure TfCadUsuarios.InserirClick(Sender: TObject);
+Begin
+          // Verificar se a tabela está em Inserção ou Edição
+          if (uqUsuarios.State) in [dsInsert, dsEdit]
+             Then Begin
+                    ShowMessage ('Tabela já está em uso!'+
+                                 CHR(13)+
+                                 'Cancele, se desejar');
+                    Exit;
+                  End;
+
+          uqUsuarios.Insert;
+End;
+
+procedure TfCadUsuarios.RegAnteriorClick(Sender: TObject);
+Begin
+  // Verificar se a tabela está em Inserção ou Edição
+         if (uqUsuarios.State) in [dsInsert, dsEdit]
+         Then Begin
+           ShowMessage ('Tabela já está em uso!'+
+           CHR(13)+
+             'Cancele, se desejar');
+           Exit;
+End;
+uqUsuarios.Prior;
+End;
+
+procedure TfCadUsuarios.RegInserirClick(Sender: TObject);
+begin
+          uqUsuarios.Insert;
+end;
+
+procedure TfCadUsuarios.RegPrimeiroClick(Sender: TObject);
+begin
+
+// Verificar se a tabela está em Inserção ou Edição
+        if (uqUsuarios.State) in [dsInsert, dsEdit]
+   Then Begin
+     ShowMessage ('Tabela já está em uso!'+
+      CHR(13)+
+        'Cancele, se desejar');
+         Exit;
+End;
+     uqUsuarios.First;
+End;
+
+procedure TfCadUsuarios.RegProximoClick(Sender: TObject);
+Begin
+// Verificar se a tabela está em Inserção ou Edição
+if (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela já está em uso!'+
+CHR(13)+
+'Cancele, se desejar');
+Exit;
+End;
+uqUsuarios.Next;
+End;
+
+procedure TfCadUsuarios.RegUltimoClick(Sender: TObject);
+Begin
+// Verificar se a tabela está em Inserção ou Edição
+if (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela já está em uso!'+
+CHR(13)+
+'Cancele, se desejar');
+Exit;
+End;
+uqUsuarios.Last;
+End;
+
+procedure TfCadUsuarios.SairClick(Sender: TObject);
+Begin
+// Verificar se a tabela está em Inserção ou Edição
+If (uqUsuarios.State) in [dsInsert, dsEdit]
+Then Begin
+ShowMessage ('Tabela está em uso!' + CHR(13)+
+'Cancele, antes de Sair');
+Exit;
+End;
+Close;
+End;
+
+procedure TfCadUsuarios.uqUsuariosCalcFields(DataSet: TDataSet);
+Var       Item : Integer; // Não esquecer de copiar a variável
+Begin
+          // Monta item do combobox para campo Nivel_Usuario
+          Item := StrToInt (uqUsuariosNivel_usuario.Value[1]);
+          case Item of
+            0: uqUsuariosNivelUser.Value := 'Administrador';
+            1: uqUsuariosNivelUser.Value := 'Normal';
+            2: uqUsuariosNivelUser.Value := 'Consulta';
+          End;
+
+          // Monta item do combobox para campo ATIVADO
+          Item := StrToInt (uqUsuariosAtivado.Value[1]);
+          case Item of
+            0: uqUsuariosStatusUser.Value := 'Desativado';
+            1: uqUsuariosStatusUser.Value := 'Ativado';
+          End;
+End;
+
+procedure TfCadUsuarios.VerSenhaMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+Begin
+          If (edtSenha.Password)
+             Then Begin
+                    edtSenha.Password  := False;
+                    edtSenha2.Password := False;
+                  End
+             Else Begin
+                    edtSenha.Password  := True;
+                    edtSenha2.Password := True;
+                  End;
+End;
+
+procedure TfCadUsuarios.VerSenhaMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+Begin
+          If (edtSenha.Password)
+             Then Begin
+                    edtSenha.Password  := False;
+                    edtSenha2.Password := False;
+                  End
+             Else Begin
+                    edtSenha.Password  := True;
+                    edtSenha2.Password := True;
+                  End;
+End;
+      end.

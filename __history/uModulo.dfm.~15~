@@ -1,0 +1,105 @@
+object Modulo: TModulo
+  Height = 328
+  Width = 529
+  object Conexao: TUniConnection
+    ProviderName = 'MySQL'
+    Port = 3306
+    Database = 'dbsyssales353'
+    Username = 'root'
+    Server = 'localhost'
+    Connected = True
+    Left = 32
+    Top = 5
+  end
+  object Provider: TMySQLUniProvider
+    Left = 91
+    Top = 5
+  end
+  object Transacoes: TUniTransaction
+    DefaultConnection = Conexao
+    Left = 165
+    Top = 5
+  end
+  object sqlOff: TUniSQL
+    Connection = Conexao
+    Left = 240
+    Top = 5
+  end
+  object uqUsuarios: TUniQuery
+    Connection = Conexao
+    SQL.Strings = (
+      'select * from usuarios')
+    OnCalcFields = uqUsuariosCalcFields
+    Left = 75
+    Top = 96
+    object uqUsuariosUsuario_ID: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'Usuario_ID'
+    end
+    object uqUsuariosNome: TStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 50
+    end
+    object uqUsuariosSobrenome: TStringField
+      FieldName = 'Sobrenome'
+      Required = True
+      Size = 50
+    end
+    object uqUsuarioseMail: TStringField
+      FieldName = 'eMail'
+      Required = True
+      Size = 100
+    end
+    object uqUsuariosUsuario: TStringField
+      FieldName = 'Usuario'
+      Required = True
+      Size = 32
+    end
+    object uqUsuariosSenha: TStringField
+      FieldName = 'Senha'
+      Required = True
+      Size = 32
+    end
+    object uqUsuariosNivel_usuario: TStringField
+      FieldName = 'Nivel_usuario'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqUsuariosDta_cadastro: TDateTimeField
+      FieldName = 'Dta_cadastro'
+      Required = True
+    end
+    object uqUsuariosDta_ultimo_login: TDateTimeField
+      FieldName = 'Dta_ultimo_login'
+      Required = True
+    end
+    object uqUsuariosAtivado: TStringField
+      FieldName = 'Ativado'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object uqUsuariosNivelUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NivelUser'
+      Calculated = True
+    end
+    object uqUsuariosStatusUser: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'StatusUser'
+      Calculated = True
+    end
+    object uqUsuariosInfo: TMemoField
+      FieldName = 'Info'
+      Required = True
+      BlobType = ftMemo
+    end
+  end
+  object udsUsuarios: TUniDataSource
+    DataSet = uqUsuarios
+    Left = 171
+    Top = 96
+  end
+end

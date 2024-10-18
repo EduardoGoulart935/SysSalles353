@@ -1,0 +1,82 @@
+unit uLogin;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
+  FMX.ListBox, FMX.Edit, FMX.Controls.Presentation, Data.DB, DBAccess, Uni,
+  MemDS;
+
+type
+  TfLogin = class(TForm)
+    Label3: TLabel;
+    Label4: TLabel;
+    edtUsuario: TEdit;
+    edtSenha: TEdit;
+    cbTipoUser: TComboBox;
+    btnEntrar: TButton;
+    Button1: TButton;
+    udsUsuarios: TUniDataSource;
+    uqUsuarios: TUniQuery;
+    procedure Button1Click(Sender: TObject);
+    procedure btnEntrarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fLogin: TfLogin;
+
+implementation
+
+{$R *.fmx}
+
+uses uPrincipal, uModulo;
+
+procedure TfLogin.btnEntrarClick(Sender: TObject);
+Var       txtUsuario, txtSenha, txtTipoUser : String;
+          Consulta : String;
+begin
+          txtUsuario  := edtUsuario.Text;
+          txtSenha    := edtSenha.Text;
+          txtTipoUser := IntToStr (cbTipoUser.ItemIndex);
+          if (txtUsuario = '') Or (txtSenha = '')
+             Then Begin
+                    ShowMessage ('Informar Usuário e Senha!');
+                    edtUsuario.SetFocus;
+                    Exit;
+                  End;
+
+          // Monta a Consulta
+          Consulta := 'select *              ' +
+                      'from usuarios         ' +
+                      'where usuario       = ' + QuotedSTR(txtUsuario) +
+                      '  and senha         = ' + QuotedSTR(txtSenha) +
+                      '  and Nivel_Usuario = ' + QuotedSTR(txtTipoUser);
+
+          uqUsuarios.Active := False;   // Desliga a query
+          uqUsuarios.SQL.Clear;         // Limpa a query
+          uqUsuarios.SQL.Add(Consulta); // Adiciona a query
+          uqUsuarios.Active := True;    // Liga query
+
+          // Verificar se veio algum resultado
+          If uqUsuarios.Fields[0].AsInteger > 0
+             Then Begin
+                    // Liberar a entrada no sistema
+                    // Cria tela principal aqui - Tirar do programa principal
+                    Application.CreateForm(TFPrincipal, FPrincipal);
+                    FPrincipal.Show;
+                    FLogin.Hide;
+                    Exit;
+                  End;
+end;
+
+procedure TfLogin.Button1Click(Sender: TObject);
+begin
+          Close;
+end;
+
+end.

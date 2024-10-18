@@ -1,0 +1,65 @@
+unit uModulo;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, DBAccess, Uni, MemDS, UniProvider,
+  MySQLUniProvider;
+
+type
+  TModulo = class(TDataModule)
+    Conexao: TUniConnection;
+    Provider: TMySQLUniProvider;
+    Transacoes: TUniTransaction;
+    sqlOff: TUniSQL;
+    uqUsuarios: TUniQuery;
+    udsUsuarios: TUniDataSource;
+    uqUsuariosUsuario_ID: TIntegerField;
+    uqUsuariosNome: TStringField;
+    uqUsuariosSobrenome: TStringField;
+    uqUsuarioseMail: TStringField;
+    uqUsuariosUsuario: TStringField;
+    uqUsuariosSenha: TStringField;
+    uqUsuariosNivel_usuario: TStringField;
+    uqUsuariosDta_cadastro: TDateTimeField;
+    uqUsuariosDta_ultimo_login: TDateTimeField;
+    uqUsuariosAtivado: TStringField;
+    uqUsuariosNivelUser: TStringField;
+    uqUsuariosStatusUser: TStringField;
+    uqUsuariosinfo: TMemoField;
+    procedure uqUsuariosCalcFields(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Modulo: TModulo;
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TModulo.uqUsuariosCalcFields(DataSet: TDataSet);
+Var       Item : Integer; // Não esquecer de copiar a variável
+Begin
+          // Monta item do combobox para campo Nivel_Usuario
+          Item := StrToInt (uqUsuariosNivel_usuario.Value[1]);
+          case Item of
+            0: uqUsuariosNivelUser.Value := 'Administrador';
+            1: uqUsuariosNivelUser.Value := 'Normal';
+            2: uqUsuariosNivelUser.Value := 'Consulta';
+          End;
+
+          // Monta item do combobox para campo ATIVADO
+          Item := StrToInt (uqUsuariosAtivado.Value[1]);
+          case Item of
+            0: uqUsuariosStatusUser.Value := 'Desativado';
+            1: uqUsuariosStatusUser.Value := 'Ativado';
+          End;
+End;
+
+end.
